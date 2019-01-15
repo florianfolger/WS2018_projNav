@@ -48,7 +48,7 @@ value = 1;
 % OccupancyGrid
 map = robotics.BinaryOccupancyGrid(30,30,7);
 
-fid = fopen('xyRobo.txt','w');
+fid = fopen('trajektorie.txt','w');
 while value
     reply = input('Enter control command \n', 's');
     
@@ -94,7 +94,7 @@ while value
             value = 1;
             continue;
         case 'b' %exit while
-            [x y] = trajektorie('xyRobo.txt');
+            [x y] = trajektorie('trajektorie.txt');
             plot(x,y,'.r');
             value = -1;
             break;
