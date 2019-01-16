@@ -1,8 +1,9 @@
 function [X Y xR yR] = sensorData(sensorDistance,map)
 %% Sensorkoordinaten relativ zum Roboter, Winkel, Polarkoordinaten
 %INIT
-x = arrobot_getx()+10000;
-y = arrobot_gety()+10000;
+x = arrobot_getx()+5000;
+y = arrobot_gety()+5000;
+xy = [x y]/1000;
 alpha = arrobot_getth();
 
 spose = [0.069 0.136 90,
@@ -23,11 +24,16 @@ spose = [0.069 0.136 90,
     -0.157 0.136 90];
 
 % Berechnung der Polarkoordinaten
-for i = 1:16
-    if sensorDistance(i,1) < 5000
-        deltaY = (sensorDistance(i,1) * sind(spose(i,3) + alpha) + y) / 1000;
-        deltaX = (sensorDistance(i,1) * cosd(spose(i,3) + alpha) + x) / 1000;
-        sData(i,1:2) = [deltaX; deltaY];
+% nData.measurement = [];
+% measurement = {'m1';'m2';'m3';'m4';'m5';'m6';'m7';'m8';'m9';'m10'};
+for k = 1:16
+    if sensorDistance(k,1) < 5000
+        deltaY = (sensorDistance(k,1) * sind(spose(k,3) + alpha) + y) / 1000;
+        deltaX = (sensorDistance(k,1) * cosd(spose(k,3) + alpha) + x) / 1000;
+        sData(k,1:2) = [deltaX; deltaY];
+%         for i = 1:length(measurement)
+%             nData.measurement(k).(measurement{i}) = sData(k,1:2);
+%         end
         %         plot(sData(i,1), sData(i,2), '.b');
         %         hold on;
         %         axis equal;
@@ -36,10 +42,12 @@ for i = 1:16
         grid on;
         hold on;
     end
-    hold on;
-    plot(x/1000,y/1000,'.r');
-    hold on;
+    %     % für trajektorie.txt datei
+    %     hold on;
+    %     plot(x/1000,y/1000,'.r');
+    %     hold on;
 end
+
 
 
 X = sData(:,1);
