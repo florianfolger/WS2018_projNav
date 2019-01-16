@@ -1,0 +1,3 @@
+ARIA Matlab Interface built 07-Jan-2017 by Admin@TABMAYR-PC
+Matlab 9.1.0.441655 (R2016b) PCWIN64
+Used ARIA DLL AriaVC10.dll with link flags -L. -lariac_vc10_x64 -L../lib64 -L../bin64 -lAriaVC10
