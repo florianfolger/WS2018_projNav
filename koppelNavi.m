@@ -1,12 +1,11 @@
-function [xK yK alphaK] = koppelNavi(x,y,alpha)
+function koppel = koppelNavi(xR,yR,alphaR,xBox,yBox)
 %% Funktion um eine Bewegung zu berechnen
 
-x_neu = 3000;
-y_neu = 3000;
+xK = (xR + xBox * cos(alphaR)) / 1000;
+yK = (yR + yBox * sin(alphaR)) / 1000;
+alphaK = atan2(yR,xR);
 
-xK = (x + x_neu * cos(alpha)) / 1000;
-yK = (y + y_neu * sin(alpha)) / 1000;
-alphaK = atan2(y_neu,x_neu);
+koppel = [xK yK alphaK];
 
 end
 
