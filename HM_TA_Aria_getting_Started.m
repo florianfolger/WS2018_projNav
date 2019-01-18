@@ -33,7 +33,7 @@ addpath('C:\Users\Sysadmin\Desktop\WS2018_projNav\ARIA_2.9.1 (64-bit)_matlab_pre
 %% connect to the robot:
 % aria_init -rh 10.22.192.161  -rrtp 8101
 % Roboter 1
-aria_init -rh 10.22.195.192  -rrtp 8104; % cmd ipconfig
+aria_init -rh 10.22.195.192  -rrtp 8102; % cmd ipconfig
 % Roboter 2
 % aria_init -rh 10.22.195.192  -rrtp 8105
 arrobot_connect;
@@ -69,8 +69,10 @@ if value == 1
             sensor(k,1) = arrobot_getsonarrange(k-1);
         end
         %Sensordaten umwandeln und Punkte plotten
-        [x_sensorData y_sensorData xR yR] = sensorData(sensor,map);
+        [sData xR yR] = sensorData(sensor,map);
         xyR = [xR yR];
+        % detect collision
+        collisionAvoidance(sensor);
         %Trajektorie in einem File speichern
         fprintf(fid,'%s\n',num2str(xyR));
         switch reply
@@ -88,13 +90,21 @@ if value == 1
                 arrobot_setdeltaheading(-90);
                 pause(5);
                 continue;
+            case '0'
+                arrobot_setdeltaheading
             case 't' %turn 180°
                 arrobot_setdeltaheading(180);
                 pause(7);
                 continue;
             case 'p' %plot roboweg
                 [x y] = trajektorie('trajektorie.txt');
-                roboweg = plot(x,y,'.r');
+                setOccupancy(map, sData, ones(1,1));
+                figure(1)
+                show(map);
+                grid on;
+                hold on;
+                roboweg = plot(x,y,'*r');
+                hold on;
                 continue;
             case 'e' %erase
                 if reply == 'p'
@@ -114,15 +124,7 @@ if value == 1
                 end
                 continue;
             case 'h' % robo drives to his start coordinates
-                home = homing(xR,yR,cornerPoints);
-            case 'test'
-                %                 move(3200,0);
-                %                 Curx = arrobot_getx();
-                %                 Cury =arrobot_gety()
-                xTest = arrobot_getx()
-                yTest = arrobot_gety()
-                xT = (arrobot_getx()+5000) / 1000
-                yT = (arrobot_gety()+5000) / 1000
+                home = homing(xR,yR,cornerPoints,map);
             case 'b' %exit while
                 value = -1;
                 break;

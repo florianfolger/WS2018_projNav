@@ -1,4 +1,4 @@
-function [X Y xR yR] = sensorData(sensorDistance,map)
+function [sData xR yR] = sensorData(sensorDistance,map)
 %% Sensorkoordinaten relativ zum Roboter, Winkel, Polarkoordinaten
 %INIT
 x = arrobot_getx()+5000;
@@ -24,29 +24,29 @@ spose = [0.069 0.136 90,
     -0.157 0.136 90];
 
 % Berechnung der Polarkoordinaten
-for k = 1:16
+for k = 1:length(sensorDistance(:,1))
     if sensorDistance(k,1) < 5000
         deltaY = (sensorDistance(k,1) * sind(spose(k,3) + alpha) + y) / 1000;
         deltaX = (sensorDistance(k,1) * cosd(spose(k,3) + alpha) + x) / 1000;
         sData(k,1:2) = [deltaX; deltaY];
-        %         plot(sData(i,1), sData(i,2), '.b');
-        %         hold on;
-        %         axis equal;
-        setOccupancy(map, sData, ones(1,1));
-        show(map);
+        % Plot
+        figure(2)
         grid on;
+        plot(sData(k,1), sData(k,2), '.b');
         hold on;
+        % OccupancyGrid
+        setOccupancy(map, sData, ones(1,1));
+%         figure(1)
+%         show(map);
+%         grid on;
+%         hold on;
     end
     % RoboterPose
-    %     hold on;
-    %     plot(x/1000,y/1000,'.r');
-    %     hold on;
+    figure(2)
+    plot(x/1000,y/1000,'*r');
+    hold on;
 end
 
-
-
-X = sData(:,1);
-Y = sData(:,2);
 xR = x/1000;
 yR = y/1000;
 

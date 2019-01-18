@@ -9,6 +9,8 @@ if value == 1
         [distance,box] = boxLocation(box);
         if min(distance(:,1)) < 1.5 & min(distance(:,1)) > 0.40
             [distance,box] = boxLocation(box);
+            [val, idx] = min(distance(:,1));
+            angle(box(idx,1), box(idx,2));
             arrobot_setvel(50);
             pause(1.5);
             arrobot_stop;

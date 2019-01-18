@@ -1,4 +1,4 @@
-function am = automove(distance,point)
+function am = automove(distance,point,map)
 %% Funktion damit der Roboter autonom sich fortbewegt
 %INIT
 value = 1;
@@ -13,6 +13,7 @@ while value == 1
         arrobot_setvel(300);
         pause(1.5);
         arrobot_stop;
+        autoplot(map);
         value = 1;
         continue;
     else

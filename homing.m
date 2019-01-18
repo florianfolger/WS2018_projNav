@@ -1,4 +1,4 @@
-function home = homing(xR,yR,cornerPoints)
+function home = homing(xR,yR,cornerPoints,map)
 %% Funktion die den Roboter zu seinem Startpunkt zurückfährt
 %INIT
 cornerPoint = [5 5; 16 5; 16.35 11.65; 5 11.65];
@@ -22,18 +22,18 @@ while value == 1
         if threshP2(1,:) == 1 | threshP4(1,:) == 1
             corner = cornerPoint(1,:);
             angle(corner(1,1),corner(1,2));
-            am = automove(val,cornerPoint(1,:));
+            am = automove(val,cornerPoint(1,:),map);
         else
             % sucht seine näheste Ecke
             corner = cornerPoint(idx,:);
             angle(corner(1,1),corner(1,2));
-            am = automove(val,cornerPoint(idx,:));
+            am = automove(val,cornerPoint(idx,:),map);
         end
         % Prüfe Schwellwert für den Eckpunkt 3
         if threshP3(1,:) == 1
             corner = cornerPoint(2,:);
             angle(corner(1,1),corner(1,2));
-            am = automove(val,cornerPoint(2,:));
+            am = automove(val,cornerPoint(2,:),map);
         end
         % Point 1, exit
         startPoint = (robo(1,:) <= cornerPoint(1,:)+tol)&(robo(1,:) >= cornerPoint(1,:)-tol);
