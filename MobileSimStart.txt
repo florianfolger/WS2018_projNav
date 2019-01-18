@@ -1,1 +1,1 @@
-"C:\Program Files\MobileRobots\MobileSim\MobileSim.exe" -m "C:\Users\Sysadmin\Desktop\WS2018_projNav\HM_Karlstrasse_F8100_OG3_mod.map" -r "p3dx:robot1" --start "12710,11880,0" -r "p3dx:robot2" -r box 
+"C:\Program Files\MobileRobots\MobileSim\MobileSim.exe" -m "C:\Users\Sysadmin\Desktop\WS2018_projNav\HM_Karlstrasse_F8100_OG3_mod.map" -r box -r box -r box -r "p3dx:robot1" --start "12710,11880,0" -r "p3dx:robot2"  

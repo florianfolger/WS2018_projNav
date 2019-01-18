@@ -15,7 +15,7 @@ for i=1:length(box(:,1))
     end
     % Falls Briefkasten erreicht String ausgabe
     if boxDistance(i,1) <= 0.40
-        disp(['Box' erreicht'])
+        disp(['Box erreicht'])
         arrobot_stop;
         boxDistance(i,:) = [];
         idx = i + 1;

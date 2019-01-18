@@ -16,8 +16,7 @@ clc;
 %% MobileSim starten
 % Ausführen der MobileSimStart.txt Datei in einer beliebigen Shell
 
-%% Aria Pfad und Neustartw
-
+%% Aria Pfad und Neustart
 % ==> notwendiger work around
 % pfad hinzufügen
 % addpath('C:\HM\prj\MobileRobots\ARIA_2.9.1 (64-bit)_matlab_precompiled');
@@ -52,26 +51,17 @@ map = robotics.BinaryOccupancyGrid(25,20,10);
 
 fid = fopen('trajektorie.txt','w');
 %fidHome = fopen('home.txt','w');
+%% Eckpunkte für Homing
+cornerPoints = [5 5; 16 5; 16.35 11.65; 5 11.65];
+
 %% simple Steuerung
 % press e.g e to stop the movement
 if value == 1
     while value
         %stop nach jedem vorgang
-        [distanceBox, boxNew] = boxLocation(box);
         pause(1);
         arrobot_stop;
         value = 1;
-        box = boxNew;
-        % Autonomes fahren
-        if min(distanceBox(:,1)) < 1.5 & min(distanceBox(:,1)) > 0.40
-            
-            [distanceClose,boxNew] = boxLocation(box);
-            
-            autonom = packageDropFinalize(distanceClose(:,1),box);
-            
-        end
-        
-        % Selbstständig fahren
         %Eingabe für Steuerung
         reply = input('Enter control command \n', 's');
         %Sensordaten 16
@@ -91,36 +81,48 @@ if value == 1
                 arrobot_setvel(-600);
                 continue;
             case 'a' %left
-                arrobot_setrotvel(30);
+                arrobot_setdeltaheading(90);
+                pause(5);
                 continue;
             case 'd' %right
-                arrobot_setrotvel(-30);
+                arrobot_setdeltaheading(-90);
+                pause(5);
                 continue;
             case 't' %turn 180°
-                arrobot_setrotvel(180);
-                pause(1.9);
-                arrobot_stop;
-                value = 1;
+                arrobot_setdeltaheading(180);
+                pause(7);
                 continue;
             case 'p' %plot roboweg
                 [x y] = trajektorie('trajektorie.txt');
                 roboweg = plot(x,y,'.r');
-                value = 1;
                 continue;
             case 'e' %erase
                 if reply == 'p'
                     delete(roboweg);
-                    value = 1;
                 end
-            case 'h' % robo drives to his start coordinates
-                home = homing('trajektorie.txt');
-                for i=1:length(home(:,1))
+            case 'box'
+                
+                [distanceBox, boxNew] = boxLocation(box);
+                box = boxNew;
+                % Autonomes fahren
+                if min(distanceBox(:,1)) < 1.5 & min(distanceBox(:,1)) > 0.40
+                    
+                    [distanceClose,boxNew] = boxLocation(box);
+                    
+                    autonom = packageDropFinalize(distanceClose(:,1),box);
                     
                 end
+                continue;
+            case 'h' % robo drives to his start coordinates
+                home = homing(xR,yR,cornerPoints);
             case 'test'
-%                 move(3200,0);
-%                 Curx = arrobot_getx();
-%                 Cury =arrobot_gety()
+                %                 move(3200,0);
+                %                 Curx = arrobot_getx();
+                %                 Cury =arrobot_gety()
+                xTest = arrobot_getx()
+                yTest = arrobot_gety()
+                xT = (arrobot_getx()+5000) / 1000
+                yT = (arrobot_gety()+5000) / 1000
             case 'b' %exit while
                 value = -1;
                 break;
@@ -133,4 +135,3 @@ end
 %% pause und disconnect
 % pause(2);
 arrobot_disconnect;
-
