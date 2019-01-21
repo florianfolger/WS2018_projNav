@@ -33,7 +33,7 @@ addpath('C:\Users\Sysadmin\Desktop\WS2018_projNav\ARIA_2.9.1 (64-bit)_matlab_pre
 %% connect to the robot:
 % aria_init -rh 10.22.192.161  -rrtp 8101
 % Roboter 1
-aria_init -rh 10.22.195.192  -rrtp 8102; % cmd ipconfig
+aria_init -rh 10.22.195.192  -rrtp 8104; % cmd ipconfig
 % Roboter 2
 % aria_init -rh 10.22.195.192  -rrtp 8105
 arrobot_connect;
