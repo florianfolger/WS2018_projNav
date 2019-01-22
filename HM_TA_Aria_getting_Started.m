@@ -42,13 +42,14 @@ arrobot_connect;
 arrobot_setvel(0); % Current Position from Roboter, 300
 arrobot_setrotvel(0); % translational velocity, 35
 
+%% Laden der Flurkoordinaten
+floor = load('floorplan.txt')/10000;
 %% Briefkästen mit ihren Koordinaten
 %letzte Box mit hohen Wert damit keine Dauerschleife ensteht
 box = [16 5; 16.35 11.65; 5 11.4; 100 100];
 value = 1;
 % OccupancyGrid
 map = robotics.BinaryOccupancyGrid(25,20,10);
-
 fid = fopen('trajektorie.txt','w');
 %fidHome = fopen('home.txt','w');
 %% Eckpunkte für Homing
@@ -105,6 +106,10 @@ if value == 1
                 hold on;
                 roboweg = plot(x,y,'*r');
                 hold on;
+                continue;
+                
+            case 'pAll'
+                floorOcc = floorOccupancy(floor);
                 continue;
             case 'e' %erase
                 if reply == 'p'
