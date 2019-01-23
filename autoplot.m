@@ -23,21 +23,14 @@ spose = [0.069 0.136 90,
     -0.203 0.119 130
     -0.157 0.136 90];
 for k=1:16
-    sensor(k,1) = arrobot_getsonarrange(k-1);  
+    sensor(k,1) = arrobot_getsonarrange(k-1);
     if sensor(k,1) < 5000
-      deltaY = (sensor(k,1) * sind(spose(k,3) + alpha) + y) / 1000;
-        deltaX = (sensor(k,1) * cosd(spose(k,3) + alpha) + x) / 1000;
+        deltaY = (((sensor(k,1) + hypot(spose(k,1), spose(k,2))) * sind(spose(k,3) + alpha)) + y) / 1000;
+        deltaX = (((sensor(k,1) + hypot(spose(k,1), spose(k,2))) * cosd(spose(k,3) + alpha)) + x) / 1000;
         sData(k,1:2) = [deltaX; deltaY];
-        % Plot
-        figure(2)
-        grid on;
-        plot(sData(k,1), sData(k,2), '.b');
-        hold on;
-        % OccupancyGrid
+        % Occupancy Grid
         setOccupancy(map, sData, ones(1,1));
-%         figure(1)
-%         show(map);
-%         hold on;
+        hold on;
     end
 end
 

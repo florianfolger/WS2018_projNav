@@ -26,23 +26,20 @@ spose = [0.069 0.136 90,
 % Berechnung der Polarkoordinaten
 for k = 1:length(sensorDistance(:,1))
     if sensorDistance(k,1) < 5000
-        deltaY = (sensorDistance(k,1) * sind(spose(k,3) + alpha) + y) / 1000;
-        deltaX = (sensorDistance(k,1) * cosd(spose(k,3) + alpha) + x) / 1000;
+        deltaY = (((sensorDistance(k,1) + hypot(spose(k,1), spose(k,2))) * sind(spose(k,3) + alpha)) + y) / 1000;
+        deltaX = (((sensorDistance(k,1) + hypot(spose(k,1), spose(k,2))) * cosd(spose(k,3) + alpha)) + x) / 1000;
         sData(k,1:2) = [deltaX; deltaY];
-        % Plot
-        figure(2)
-        grid on;
-        plot(sData(k,1), sData(k,2), '.b');
-        hold on;
+        % detect collision
+
         % OccupancyGrid
         setOccupancy(map, sData, ones(1,1));
-%         figure(1)
-%         show(map);
-%         grid on;
-%         hold on;
+        figure(1)
+        grid on;
+        show(map);
+        hold on;
+        
     end
     % RoboterPose
-    figure(2)
     plot(x/1000,y/1000,'*r');
     hold on;
 end

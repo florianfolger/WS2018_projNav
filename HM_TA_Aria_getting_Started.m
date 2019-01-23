@@ -13,6 +13,10 @@ clc;
 
 % ver;
 
+%% Profile on
+profile on;
+tic
+
 %% MobileSim starten
 % Ausführen der MobileSimStart.txt Datei in einer beliebigen Shell
 
@@ -43,13 +47,13 @@ arrobot_setvel(0); % Current Position from Roboter, 300
 arrobot_setrotvel(0); % translational velocity, 35
 
 %% Laden der Flurkoordinaten
-floor = load('floorplan.txt')/10000;
+floor = load('floorplan.txt');
 %% Briefkästen mit ihren Koordinaten
 %letzte Box mit hohen Wert damit keine Dauerschleife ensteht
 box = [16 5; 16.35 11.65; 5 11.4; 100 100];
 value = 1;
 % OccupancyGrid
-map = robotics.BinaryOccupancyGrid(25,20,10);
+map = robotics.BinaryOccupancyGrid(25,20,5);
 fid = fopen('trajektorie.txt','w');
 %fidHome = fopen('home.txt','w');
 %% Eckpunkte für Homing
@@ -60,35 +64,40 @@ cornerPoints = [5 5; 16 5; 16.35 11.65; 5 11.65];
 if value == 1
     while value
         %stop nach jedem vorgang
-        pause(1);
+        pause(1.5);
         arrobot_stop;
         value = 1;
-        %Eingabe für Steuerung
-        reply = input('Enter control command \n', 's');
+        
         %Sensordaten 16
         for k=1:16
             sensor(k,1) = arrobot_getsonarrange(k-1);
+            collisionAvoidance(sensor(k,1),k);
         end
+        
+        %Eingabe für Steuerung
+        reply = input('Enter control command \n', 's');
+        
         %Sensordaten umwandeln und Punkte plotten
         [sData xR yR] = sensorData(sensor,map);
         xyR = [xR yR];
-        % detect collision
-        collisionAvoidance(sensor);
+        
         %Trajektorie in einem File speichern
         fprintf(fid,'%s\n',num2str(xyR));
         switch reply
             case 'w' %forward
-                arrobot_setvel(600);
+                arrobot_setvel(300);
+                pause(1.5);
+                arrobot_stop;
                 continue;
-            case 's' %backwards inactive
-                arrobot_setvel(-600);
+            case 's' %backwards
+                arrobot_setvel(-300);
                 continue;
             case 'a' %left
-                arrobot_setdeltaheading(90);
+                arrobot_setdeltaheading(30);
                 pause(5);
                 continue;
             case 'd' %right
-                arrobot_setdeltaheading(-90);
+                arrobot_setdeltaheading(-30);
                 pause(5);
                 continue;
             case '0'
@@ -100,7 +109,7 @@ if value == 1
             case 'p' %plot roboweg
                 [x y] = trajektorie('trajektorie.txt');
                 setOccupancy(map, sData, ones(1,1));
-                figure(1)
+                figure(2)
                 show(map);
                 grid on;
                 hold on;
@@ -117,12 +126,12 @@ if value == 1
                 end
             case 'box'
                 
-                [distanceBox, boxNew] = boxLocation(box);
+                [distanceBox, boxNew] = boxlocation(box);
                 box = boxNew;
                 % Autonomes fahren
                 if min(distanceBox(:,1)) < 1.5 & min(distanceBox(:,1)) > 0.40
                     
-                    [distanceClose,boxNew] = boxLocation(box);
+                    [distanceClose,boxNew] = boxlocation(box);
                     
                     autonom = packageDropFinalize(distanceClose(:,1),box);
                     
@@ -137,8 +146,8 @@ if value == 1
         
     end
 end
-
-
+profile viewer
+toc
 %% pause und disconnect
 % pause(2);
 arrobot_disconnect;

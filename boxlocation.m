@@ -1,4 +1,4 @@
-function [boxDistanceNew, boxNew] = boxLocation(box)
+function [boxDistanceNew, boxNew] = boxlocation(box)
 %% INIT
 % Methode welche Distanzen vom Briefkasten zum Roboter misst
 xR = (arrobot_getx()+5000)/1000;
