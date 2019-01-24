@@ -29,19 +29,17 @@ for k = 1:length(sensorDistance(:,1))
         deltaY = (((sensorDistance(k,1) + hypot(spose(k,1), spose(k,2))) * sind(spose(k,3) + alpha)) + y) / 1000;
         deltaX = (((sensorDistance(k,1) + hypot(spose(k,1), spose(k,2))) * cosd(spose(k,3) + alpha)) + x) / 1000;
         sData(k,1:2) = [deltaX; deltaY];
-        % detect collision
-
         % OccupancyGrid
         setOccupancy(map, sData, ones(1,1));
         figure(1)
-        grid on;
         show(map);
+        grid on;
         hold on;
         
     end
     % RoboterPose
-    plot(x/1000,y/1000,'*r');
-    hold on;
+    %     plot(x/1000,y/1000,'*r');
+    %     hold on;
 end
 
 xR = x/1000;

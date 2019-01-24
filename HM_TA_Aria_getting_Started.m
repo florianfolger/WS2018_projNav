@@ -85,12 +85,12 @@ if value == 1
         fprintf(fid,'%s\n',num2str(xyR));
         switch reply
             case 'w' %forward
-                arrobot_setvel(300);
+                arrobot_setvel(600);
                 pause(1.5);
                 arrobot_stop;
                 continue;
             case 's' %backwards
-                arrobot_setvel(-300);
+                arrobot_setvel(-600);
                 continue;
             case 'a' %left
                 arrobot_setdeltaheading(30);
@@ -136,6 +136,7 @@ if value == 1
                     autonom = packageDropFinalize(distanceClose(:,1),box);
                     
                 end
+                
                 continue;
             case 'h' % robo drives to his start coordinates
                 home = homing(xR,yR,cornerPoints,map);
